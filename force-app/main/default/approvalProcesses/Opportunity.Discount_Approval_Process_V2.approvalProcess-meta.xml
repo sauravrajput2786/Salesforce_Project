@@ -64,7 +64,7 @@
         <allowDelegate>true</allowDelegate>
         <assignedApprover>
             <approver>
-                <name>saurav.elsner.f987f15578fc@agentforce.com</name>
+                <name>__ADMIN_USER__</name>
                 <type>user</type>
             </approver>
             <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>

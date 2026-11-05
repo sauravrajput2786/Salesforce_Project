@@ -23,8 +23,8 @@
     <redirectToCustomDomain>false</redirectToCustomDomain>
     <referrerPolicyOriginWhenCrossOrigin>true</referrerPolicyOriginWhenCrossOrigin>
     <selfRegPage>CommunitiesSelfReg</selfRegPage>
-    <siteAdmin>saurav.elsner.f987f15578fc@agentforce.com</siteAdmin>
-    <siteGuestRecordDefaultOwner>saurav.elsner.f987f15578fc@agentforce.com</siteGuestRecordDefaultOwner>
+    <siteAdmin>__ADMIN_USER__</siteAdmin>
+    <siteGuestRecordDefaultOwner>__ADMIN_USER__</siteGuestRecordDefaultOwner>
     <siteType>ChatterNetwork</siteType>
     <urlPathPrefix>customersupport</urlPathPrefix>
 </CustomSite>

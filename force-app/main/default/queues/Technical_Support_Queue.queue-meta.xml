@@ -4,7 +4,7 @@
     <name>Technical Support Queue</name>
     <queueMembers>
         <users>
-            <user>saurav.elsner.f987f15578fc@agentforce.com</user>
+            <user>__ADMIN_USER__</user>
             <user>salesuser.technova@yopmail.com</user>
         </users>
     </queueMembers>

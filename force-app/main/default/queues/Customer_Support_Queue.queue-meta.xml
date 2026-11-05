@@ -4,7 +4,7 @@
     <name>Customer Support Queue</name>
     <queueMembers>
         <users>
-            <user>saurav.elsner.f987f15578fc@agentforce.com</user>
+            <user>__ADMIN_USER__</user>
         </users>
     </queueMembers>
     <queueSobject>

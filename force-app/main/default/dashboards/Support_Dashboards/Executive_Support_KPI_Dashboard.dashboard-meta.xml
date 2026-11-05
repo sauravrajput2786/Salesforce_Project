@@ -152,8 +152,8 @@
     <dashboardType>SpecifiedUser</dashboardType>
     <description>Executive Support KPI Dashboard delivering real-time visibility into CSAT satisfaction ratings, SLA compliance metrics, ticket volume distribution, and resolution performance in ABC Service Console.</description>
     <isGridLayout>true</isGridLayout>
-    <owner>saurav.elsner.f987f15578fc@agentforce.com</owner>
-    <runningUser>saurav.elsner.f987f15578fc@agentforce.com</runningUser>
+    <owner>__ADMIN_USER__</owner>
+    <runningUser>__ADMIN_USER__</runningUser>
     <textColor>#000000</textColor>
     <title>Executive Support KPI Dashboard</title>
     <titleColor>#000000</titleColor>

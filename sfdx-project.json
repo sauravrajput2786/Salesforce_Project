@@ -8,5 +8,12 @@
   "name": "SalesforceProject",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "67.0"
+  "sourceApiVersion": "67.0",
+  "replacements": [
+    {
+      "glob": "force-app/**/*-meta.xml",
+      "stringToReplace": "__ADMIN_USER__",
+      "replaceWithEnv": "ADMIN_USERNAME"
+    }
+  ]
 }

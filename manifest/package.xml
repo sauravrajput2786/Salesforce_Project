@@ -770,7 +770,9 @@
         <name>ExperienceBundle</name>
     </types>
     <types>
+        <members>Agentforce_API_Client</members>
         <members>Laravel_Salesforce_Integration</members>
+        <members>Postman_Integration</members>
         <name>ExternalClientApplication</name>
     </types>
     <types>

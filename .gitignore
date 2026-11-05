@@ -46,3 +46,15 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+
+# Internal planning & AI assistant artifacts (architecture documented in docs/)
+.planning/
+.agents/
+
+# VSCode personal debug configs (preserves team settings.json & extensions.json)
+.vscode/launch.json
+
+# Ignore root rough apex scripts while preserving reusable scripts in scripts/apex/
+*.apex
+!scripts/apex/*.apex
+

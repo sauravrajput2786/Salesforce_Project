@@ -858,7 +858,7 @@
     <formulas>
         <name>formula_AdminEmail</name>
         <dataType>String</dataType>
-        <expression>IF(NOT(ISBLANK({!Get_System_Administrator_User_72h.Email})), {!Get_System_Administrator_User_72h.Email}, &quot;saurav.elsner@gmail.com&quot;)</expression>
+        <expression>IF(NOT(ISBLANK({!Get_System_Administrator_User_72h.Email})), {!Get_System_Administrator_User_72h.Email}, {!$User.Email})</expression>
     </formulas>
     <formulas>
         <name>formula_AdminId_48h</name>
@@ -1164,7 +1164,7 @@
         <locationY>250</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_System_Administrator_User_48h</targetReference>
+            <targetReference>Get_Admin_Profile_48h</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -1319,6 +1319,27 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Get_Admin_Profile_48h</name>
+        <label>Get System Administrator Profile (Res Viol)</label>
+        <locationX>500</locationX>
+        <locationY>275</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_System_Administrator_User_48h</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>System Administrator</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Profile</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>Get_System_Administrator_User_48h</name>
         <label>Get System Administrator User (Res Viol)</label>
         <locationX>500</locationX>
@@ -1329,10 +1350,10 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Username</field>
+            <field>ProfileId</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>saurav.elsner.f987f15578fc@agentforce.com</stringValue>
+                <elementReference>Get_Admin_Profile_48h.Id</elementReference>
             </value>
         </filters>
         <filters>
@@ -1347,6 +1368,27 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Get_Admin_Profile_72h</name>
+        <label>Get System Administrator Profile (L2 Critical)</label>
+        <locationX>700</locationX>
+        <locationY>450</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_System_Administrator_User_72h</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>System Administrator</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Profile</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>Get_System_Administrator_User_72h</name>
         <label>Get System Administrator User (L2 Critical)</label>
         <locationX>700</locationX>
@@ -1357,10 +1399,10 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Username</field>
+            <field>ProfileId</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>saurav.elsner.f987f15578fc@agentforce.com</stringValue>
+                <elementReference>Get_Admin_Profile_72h.Id</elementReference>
             </value>
         </filters>
         <filters>
@@ -1411,7 +1453,7 @@
         <locationX>700</locationX>
         <locationY>400</locationY>
         <connector>
-            <targetReference>Get_System_Administrator_User_72h</targetReference>
+            <targetReference>Get_Admin_Profile_72h</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
