@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Issue_Sub_Category__c</fullName>
+    <description>Granular issue sub-category dependent on Issue_Category__c.</description>
+    <label>Issue Sub-Category</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Issue_Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Application Crash</fullName>
+                <default>false</default>
+                <label>Application Crash</label>
+            </value>
+            <value>
+                <fullName>Performance / Latency</fullName>
+                <default>false</default>
+                <label>Performance / Latency</label>
+            </value>
+            <value>
+                <fullName>API / Webhook Error</fullName>
+                <default>false</default>
+                <label>API / Webhook Error</label>
+            </value>
+            <value>
+                <fullName>Invoice Discrepancy</fullName>
+                <default>false</default>
+                <label>Invoice Discrepancy</label>
+            </value>
+            <value>
+                <fullName>Refund Request</fullName>
+                <default>false</default>
+                <label>Refund Request</label>
+            </value>
+            <value>
+                <fullName>Subscription Charge</fullName>
+                <default>false</default>
+                <label>Subscription Charge</label>
+            </value>
+            <value>
+                <fullName>Feature Walkthrough</fullName>
+                <default>false</default>
+                <label>Feature Walkthrough</label>
+            </value>
+            <value>
+                <fullName>Configuration Assistance</fullName>
+                <default>false</default>
+                <label>Configuration Assistance</label>
+            </value>
+            <value>
+                <fullName>Password Reset / SSO</fullName>
+                <default>false</default>
+                <label>Password Reset / SSO</label>
+            </value>
+            <value>
+                <fullName>Permission Issue</fullName>
+                <default>false</default>
+                <label>Permission Issue</label>
+            </value>
+            <value>
+                <fullName>General Question</fullName>
+                <default>false</default>
+                <label>General Question</label>
+            </value>
+            <value>
+                <fullName>Documentation Request</fullName>
+                <default>false</default>
+                <label>Documentation Request</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Technical Support</controllingFieldValue>
+            <valueName>Application Crash</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Technical Support</controllingFieldValue>
+            <valueName>Performance / Latency</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Technical Support</controllingFieldValue>
+            <valueName>API / Webhook Error</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Billing Support</controllingFieldValue>
+            <valueName>Invoice Discrepancy</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Billing Support</controllingFieldValue>
+            <valueName>Refund Request</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Billing Support</controllingFieldValue>
+            <valueName>Subscription Charge</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Product Guidance</controllingFieldValue>
+            <valueName>Feature Walkthrough</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Product Guidance</controllingFieldValue>
+            <valueName>Configuration Assistance</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Access / Security</controllingFieldValue>
+            <valueName>Password Reset / SSO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Access / Security</controllingFieldValue>
+            <valueName>Permission Issue</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>General Inquiry</controllingFieldValue>
+            <valueName>General Question</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>General Inquiry</controllingFieldValue>
+            <valueName>Documentation Request</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>General Inquiry</controllingFieldValue>
+            <valueName>Other</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

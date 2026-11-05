@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Opportunity Pipeline by Stage" icon-name="standard:opportunity">
+        
+        <!-- Refresh Action Button -->
+        <div slot="actions">
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                alternative-text="Refresh Pipeline"
+                title="Refresh Pipeline Data"
+                variant="border-filled"
+                onclick={handleRefresh}>
+            </lightning-button-icon>
+        </div>
+
+        <div class="slds-p-around_medium card-content">
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading Pipeline..." size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Error State -->
+            <template if:true={errorMessage}>
+                <div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_medium" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>{errorMessage}</h2>
+                </div>
+            </template>
+
+            <!-- Data State -->
+            <template if:true={hasData}>
+
+                <!-- Top KPI Metrics Banner -->
+                <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium kpi-container">
+                    <div class="slds-col slds-size_1-of-2">
+                        <div class="kpi-card slds-p-around_small slds-theme_shade slds-border_right">
+                            <p class="slds-text-title_caps slds-text-color_weak">Total Pipeline Value</p>
+                            <p class="slds-text-heading_medium kpi-value">{formattedGrandTotal}</p>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <div class="kpi-card slds-p-around_small slds-theme_shade">
+                            <p class="slds-text-title_caps slds-text-color_weak">Active Open Deals</p>
+                            <p class="slds-text-heading_medium kpi-value">{totalDeals} Deals</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="slds-m-vertical_small" />
+
+                <!-- Stage-wise Breakdown Cards -->
+                <div class="stage-list">
+                    <template for:each={stages} for:item="stage">
+                        <div key={stage.stageName} class="stage-row slds-m-bottom_small slds-p-around_x-small slds-border_bottom">
+                            
+                            <!-- Header: Stage Name, Deal Count, Stage Amount -->
+                            <div class="slds-grid slds-grid_align-spread slds-m-bottom_xx-small">
+                                <div class="slds-grid slds-grid_vertical-align-center">
+                                    <span class="slds-badge slds-theme_inverse slds-m-right_x-small">{stage.dealCount} deals</span>
+                                    <span class="slds-text-title_bold">{stage.stageName}</span>
+                                </div>
+                                <div class="slds-text-align_right">
+                                    <span class="slds-text-title_bold stage-amount">{stage.formattedAmount}</span>
+                                    <span class="slds-text-color_weak slds-m-left_xx-small">({stage.percentageOfTotal}%)</span>
+                                </div>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="slds-progress-bar slds-progress-bar_small slds-progress-bar_circular" aria-valuemin="0" aria-valuemax="100" aria-valuenow={stage.percentageOfTotal} role="progressbar">
+                                <span class="slds-progress-bar__value" style={stage.progressStyle}>
+                                    <span class="slds-assistive-text">Progress: {stage.percentageOfTotal}%</span>
+                                </span>
+                            </div>
+
+                        </div>
+                    </template>
+                </div>
+
+            </template>
+
+            <!-- Empty State -->
+            <template if:true={isEmpty}>
+                <div class="slds-text-align_center slds-p-around_large slds-text-color_weak">
+                    <lightning-icon icon-name="utility:info" size="small" class="slds-m-bottom_x-small"></lightning-icon>
+                    <p>No open opportunities found in pipeline.</p>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
+

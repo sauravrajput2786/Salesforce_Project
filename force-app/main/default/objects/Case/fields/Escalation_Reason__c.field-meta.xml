@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Escalation_Reason__c</fullName>
+    <description>Reason why this support case was escalated to higher tier or management</description>
+    <inlineHelpText>Select the primary reason for escalating this ticket</inlineHelpText>
+    <label>Escalation Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>SLA Breach Risk</fullName>
+                <default>false</default>
+                <label>SLA Breach Risk</label>
+            </value>
+            <value>
+                <fullName>Technical Complexity</fullName>
+                <default>false</default>
+                <label>Technical Complexity</label>
+            </value>
+            <value>
+                <fullName>Customer Dissatisfaction</fullName>
+                <default>false</default>
+                <label>Customer Dissatisfaction</label>
+            </value>
+            <value>
+                <fullName>Management Request</fullName>
+                <default>false</default>
+                <label>Management Request</label>
+            </value>
+            <value>
+                <fullName>Unresponsive External Vendor</fullName>
+                <default>false</default>
+                <label>Unresponsive External Vendor</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

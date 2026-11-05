@@ -1,0 +1,1 @@
+OpportunityShare os = new OpportunityShare(OpportunityId = '006aj00000dOhJtAAK', UserOrGroupId = '005aj00000fj5NJAAY', OpportunityAccessLevel = 'Read'); insert os; System.debug('SHARE_CREATED: ' + os.Id);

@@ -1,0 +1,66 @@
+<template>
+    <lightning-card title={cardTitle} icon-name="standard:opportunity">
+        <!-- Action Button in card header -->
+        <div slot="actions">
+            <lightning-button 
+                label="Log Review" 
+                variant="brand-outline" 
+                icon-name="utility:check" 
+                onclick={handleNotifyReview}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium card-body">
+            <!-- Loading state -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading Opportunity Data" size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Loaded Data State -->
+            <template if:true={hasData}>
+                <!-- Health Badge Banner -->
+                <div class="deal-badge-container slds-m-bottom_small">
+                    <span class={dealBadgeClass}>
+                        {dealBadgeLabel}
+                    </span>
+                </div>
+
+                <!-- Deal Key Metrics Grid -->
+                <div class="slds-grid slds-wrap slds-gutters_small metric-grid">
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                        <span class="slds-text-title slds-text-color_weak">Deal Amount</span>
+                        <div class="slds-text-heading_small amount-text">{oppAmount}</div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                        <span class="slds-text-title slds-text-color_weak">Stage</span>
+                        <div class="slds-text-body_regular slds-truncate font-semibold">{oppStage}</div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                        <span class="slds-text-title slds-text-color_weak">Close Date</span>
+                        <div class="slds-text-body_regular">{oppCloseDate}</div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                        <span class="slds-text-title slds-text-color_weak">Deal Type</span>
+                        <div class="slds-text-body_regular">
+                            <template if:true={isHotDeal}>
+                                <lightning-badge label="High Priority" class="hot-badge"></lightning-badge>
+                            </template>
+                            <template if:false={isHotDeal}>
+                                <lightning-badge label="Standard" class="standard-badge"></lightning-badge>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Footer -->
+        <div slot="footer" class="slds-text-align_right">
+            <span class="slds-text-color_weak slds-text-body_small">
+                Powered by LWC &bull; Reactive Data Service
+            </span>
+        </div>
+    </lightning-card>
+</template>

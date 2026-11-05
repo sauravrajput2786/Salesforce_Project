@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_Restore_Critical_Priority</name>
+        <label>Restore Critical Priority</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Priority</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Critical</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Decision_Is_Critical_Downgrade</name>
+        <label>Is Critical Downgrade?</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <defaultConnectorLabel>Allow</defaultConnectorLabel>
+        <rules>
+            <name>Rule_Prevent_Downgrade</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Priority</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Critical</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Restore_Critical_Priority</targetReference>
+            </connector>
+            <label>Prevent Downgrade</label>
+        </rules>
+    </decisions>
+    <description>Enterprise Priority Immunity: Prevents automated SLA breach actions or manual updates from downgrading an existing Critical priority ticket to High.</description>
+    <environments>Default</environments>
+    <interviewLabel>Case Critical Priority Guard {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case Critical Priority Guard</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Decision_Is_Critical_Downgrade</targetReference>
+        </connector>
+        <filterFormula>AND(
+  NOT(ISNEW()),
+  {!$Profile.Name} != &apos;System Administrator&apos;,
+  ISCHANGED({!$Record.Priority}),
+  TEXT({!$Record__Prior.Priority}) = &apos;Critical&apos;,
+  TEXT({!$Record.Priority}) != &apos;Critical&apos;
+)</filterFormula>
+        <object>Case</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

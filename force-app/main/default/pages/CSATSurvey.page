@@ -1,0 +1,178 @@
+<apex:page controller="CSATSurveyController" action="{!init}" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Customer Satisfaction Survey | ABC Support</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f3f5f9; color: #1e293b; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .survey-card { background: #ffffff; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04); max-width: 520px; width: 100%; overflow: hidden; border: 1px solid #e2e8f0; }
+        .header { background: linear-gradient(135deg, #0176d3 0%, #014486 100%); color: #ffffff; padding: 28px 24px; text-align: center; }
+        .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+        .header p { font-size: 14px; opacity: 0.9; }
+        .case-badge { display: inline-block; background: rgba(255, 255, 255, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-top: 10px; }
+        .content { padding: 32px 24px; }
+        .section-title { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 16px; text-align: center; }
+        .star-rating { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+        .star-option { position: relative; }
+        .star-option input[type="radio"] { position: absolute; opacity: 0; cursor: pointer; }
+        .star-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 68px; height: 68px; border: 2px solid #e2e8f0; border-radius: 10px; background: #ffffff; cursor: pointer; transition: all 0.2s ease; }
+        .star-btn .star-icon { font-size: 24px; color: #cbd5e1; transition: color 0.2s ease; }
+        .star-btn .star-label { font-size: 11px; font-weight: 600; color: #64748b; margin-top: 4px; }
+        .star-option input[type="radio"]:checked + .star-btn { border-color: #0176d3; background: #f0f7ff; }
+        .star-option input[type="radio"]:checked + .star-btn .star-icon { color: #f59e0b; }
+        .star-option input[type="radio"]:checked + .star-btn .star-label { color: #0176d3; }
+        .star-btn:hover { border-color: #94a3b8; transform: translateY(-2px); }
+        .form-group { margin-bottom: 24px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+        .form-control { width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px; font-size: 14px; transition: border-color 0.2s ease; outline: none; }
+        .form-control:focus { border-color: #0176d3; box-shadow: 0 0 0 3px rgba(1, 118, 211, 0.15); }
+        .submit-btn { width: 100%; background: #0176d3; color: #ffffff; border: none; padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s ease; }
+        .submit-btn:hover { background: #015ba5; }
+        .status-box { padding: 24px; text-align: center; }
+        .success-icon { width: 64px; height: 64px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px; }
+        .error-icon { width: 64px; height: 64px; background: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px; }
+        .status-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .status-desc { font-size: 14px; color: #64748b; line-height: 1.6; }
+        .footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px; text-align: center; font-size: 12px; color: #94a3b8; }
+        .error-msg { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="survey-card">
+        <div class="header">
+            <h1>ABC Customer Support</h1>
+            <p>Your satisfaction is our top priority</p>
+            <apex:outputPanel rendered="{!isValidToken}">
+                <div class="case-badge">Case #{!targetCase.CaseNumber}</div>
+            </apex:outputPanel>
+        </div>
+
+        <div class="content" id="mainContainer">
+            <!-- Case 1: Survey Form View (Pure HTML + JS - Zero ViewState) -->
+            <apex:outputPanel rendered="{!isValidToken}">
+                <div id="surveyFormArea">
+                    <div id="formErrorMessage" class="error-msg" style="display:none;"></div>
+                    <div class="section-title">How would you rate your support experience?</div>
+                    
+                    <div class="star-rating">
+                        <label class="star-option">
+                            <input type="radio" name="ratingRadio" value="1" onchange="selectStar('1')"/>
+                            <div class="star-btn"><span class="star-icon">&#9733;</span><span class="star-label">1 - Poor</span></div>
+                        </label>
+                        <label class="star-option">
+                            <input type="radio" name="ratingRadio" value="2" onchange="selectStar('2')"/>
+                            <div class="star-btn"><span class="star-icon">&#9733;</span><span class="star-label">2 - Fair</span></div>
+                        </label>
+                        <label class="star-option">
+                            <input type="radio" name="ratingRadio" value="3" onchange="selectStar('3')"/>
+                            <div class="star-btn"><span class="star-icon">&#9733;</span><span class="star-label">3 - Average</span></div>
+                        </label>
+                        <label class="star-option">
+                            <input type="radio" name="ratingRadio" value="4" onchange="selectStar('4')"/>
+                            <div class="star-btn"><span class="star-icon">&#9733;</span><span class="star-label">4 - Good</span></div>
+                        </label>
+                        <label class="star-option">
+                            <input type="radio" name="ratingRadio" value="5" onchange="selectStar('5')"/>
+                            <div class="star-btn"><span class="star-icon">&#9733;</span><span class="star-label">5 - Great</span></div>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="feedbackText">Tell us about your experience (Optional):</label>
+                        <textarea id="feedbackText" class="form-control" rows="4" placeholder="What went well? How can we improve our service?"></textarea>
+                    </div>
+
+                    <button type="button" id="submitBtn" class="submit-btn" onclick="submitFeedbackAsync();">
+                        Submit Feedback
+                    </button>
+                </div>
+            </apex:outputPanel>
+
+            <!-- Case 2: Success Confirmation View -->
+            <div id="successPanel" class="status-box" style="{!IF(isSuccess, '', 'display:none;')}">
+                <div class="success-icon">&#10003;</div>
+                <div class="status-title" style="color: #16a34a;">Thank You!</div>
+                <div class="status-desc" id="successDesc">
+                    Your feedback has been successfully submitted and recorded for Case #{!targetCase.CaseNumber}. We appreciate your time in helping us improve ABC support services!
+                </div>
+            </div>
+
+            <!-- Case 3: Already Submitted View -->
+            <apex:outputPanel rendered="{!isAlreadySubmitted}">
+                <div class="status-box">
+                    <div class="success-icon" style="background: #e0f2fe; color: #0284c7;">&#8505;</div>
+                    <div class="status-title" style="color: #0369a1;">Feedback Already Received</div>
+                    <div class="status-desc">{!pageMessage}</div>
+                </div>
+            </apex:outputPanel>
+
+            <!-- Case 4: Invalid Token / Error View -->
+            <apex:outputPanel rendered="{!NOT(isValidToken) && NOT(isSuccess) && NOT(isAlreadySubmitted)}">
+                <div class="status-box">
+                    <div class="error-icon">&#33;</div>
+                    <div class="status-title" style="color: #dc2626;">Link Expired or Invalid</div>
+                    <div class="status-desc">{!pageMessage}</div>
+                </div>
+            </apex:outputPanel>
+        </div>
+
+        <script>
+            var selectedRatingVal = '';
+            var urlToken = '{!$CurrentPage.parameters.token}';
+
+            function selectStar(val) {
+                selectedRatingVal = val;
+                document.getElementById('formErrorMessage').style.display = 'none';
+            }
+
+            function submitFeedbackAsync() {
+                if (!selectedRatingVal) {
+                    var err = document.getElementById('formErrorMessage');
+                    err.innerText = 'Please select your rating (1 to 5 stars) before submitting.';
+                    err.style.display = 'block';
+                    return;
+                }
+
+                var btn = document.getElementById('submitBtn');
+                btn.disabled = true;
+                btn.innerText = 'Submitting...';
+
+                var commentsVal = document.getElementById('feedbackText').value;
+
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.CSATSurveyController.submitSurveyRemote}',
+                    urlToken,
+                    selectedRatingVal,
+                    commentsVal,
+                    function(result, event) {
+                        if (event.status && result.success) {
+                            var formArea = document.getElementById('surveyFormArea');
+                            if (formArea) formArea.style.display = 'none';
+                            
+                            var successPanel = document.getElementById('successPanel');
+                            if (successPanel) {
+                                document.getElementById('successDesc').innerText = result.message;
+                                successPanel.style.display = 'block';
+                            }
+                        } else {
+                            btn.disabled = false;
+                            btn.innerText = 'Submit Feedback';
+                            var err = document.getElementById('formErrorMessage');
+                            err.innerText = (result && result.message) ? result.message : 'Unable to submit feedback. Please try again.';
+                            err.style.display = 'block';
+                        }
+                    },
+                    { buffer: false, escape: true }
+                );
+            }
+        </script>
+
+        <div class="footer">
+            &copy; ABC Cloud Services &bull; Secure Customer Feedback Portal
+        </div>
+    </div>
+</body>
+</html>
+</apex:page>

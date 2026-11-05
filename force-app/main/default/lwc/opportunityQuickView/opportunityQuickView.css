@@ -1,0 +1,44 @@
+:host {
+    display: block;
+}
+
+.deal-badge-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.badge-banner {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    transition: all 0.2s ease-in-out;
+}
+
+.badge-banner.standard {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.badge-banner.hot {
+    background-color: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+}
+
+.amount-text {
+    color: #0b5cab;
+    font-weight: 700;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.metric-grid {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 0.75rem;
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CASE_NUMBER</field>
+    </columns>
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>STATUS</field>
+    </columns>
+    <columns>
+        <field>PRIORITY</field>
+    </columns>
+    <columns>
+        <field>Case.SLAViolation__c</field>
+    </columns>
+    <customDetailFormulas>
+        <calculatedFormula>IF(TEXT(Case.SLAViolation__c) = &quot;Yes&quot;, &quot;Breached&quot;, &quot;SLA Compliant&quot;)</calculatedFormula>
+        <dataType>Text</dataType>
+        <description>SLA Compliance Status</description>
+        <developerName>CDF1</developerName>
+        <label>SLA Status</label>
+        <scale>2</scale>
+    </customDetailFormulas>
+    <description>Executive tracking of SLA compliance rate and breached tickets across support tiers.</description>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CDF1</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <name>SLA Compliance and Breach Report</name>
+    <params>
+        <name>units</name>
+        <value>h</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATEONLY</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

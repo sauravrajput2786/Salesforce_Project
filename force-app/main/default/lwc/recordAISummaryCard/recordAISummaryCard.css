@@ -1,0 +1,40 @@
+.badge-high {
+    background-color: #fef1ee;
+    color: #ea001e;
+    font-weight: 700;
+    border: 1px solid #ea001e;
+    padding: 3px 8px;
+}
+
+.badge-medium {
+    background-color: #fff9e6;
+    color: #b25e00;
+    font-weight: 700;
+    border: 1px solid #fe9339;
+    padding: 3px 8px;
+}
+
+.badge-low {
+    background-color: #eefbf3;
+    color: #04844b;
+    font-weight: 700;
+    border: 1px solid #04844b;
+    padding: 3px 8px;
+}
+
+.action-banner {
+    background: #f3f9fe;
+    border-left: 4px solid #0176d3;
+    border-radius: 4px;
+    color: #014486;
+    font-size: 0.85rem;
+}
+
+.summary-container {
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    line-height: 1.6;
+    color: #181818;
+    font-size: 0.875rem;
+}
+

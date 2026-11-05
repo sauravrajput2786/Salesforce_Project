@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Set_Lead_Rating_Cold</name>
+        <label>Set Lead Rating Cold</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Lead_Rating__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Cold</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Set_Lead_Rating_Hot</name>
+        <label>Set Lead Rating Hot</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Lead_Rating__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Hot</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Set_Lead_Rating_Warm</name>
+        <label>Set Lead Rating Warm</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Lead_Rating__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Warm</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Set_Lead_Score</name>
+        <label>Set Lead Score</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Lead_Score__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Total_Score</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Check_Score_Threshold</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Check_Score_Threshold</name>
+        <label>Check Score Threshold</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_Lead_Rating_Cold</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Cold</defaultConnectorLabel>
+        <rules>
+            <name>Hot</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Total_Score</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>80.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Lead_Rating_Hot</targetReference>
+            </connector>
+            <label>Hot</label>
+        </rules>
+        <rules>
+            <name>Warm</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Total_Score</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>50.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Total_Score</leftValueReference>
+                <operator>LessThan</operator>
+                <rightValue>
+                    <numberValue>80.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Lead_Rating_Warm</targetReference>
+            </connector>
+            <label>Warm</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>Total_Score</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+    {!$Record.AnnualRevenue} &gt; 1000000,
+    25,
+    IF({!$Record.AnnualRevenue} &gt; 100000, 15, 0)
+)
++
+IF(
+    CONTAINS({!$Record.Title}, &quot;Manager&quot;) ||
+    CONTAINS({!$Record.Title}, &quot;Director&quot;) ||
+    CONTAINS({!$Record.Title}, &quot;VP&quot;) ||
+    CONTAINS({!$Record.Title}, &quot;CEO&quot;) ||
+    CONTAINS({!$Record.Title}, &quot;Head&quot;),
+    20,
+    0
+)
++
+IF(
+    OR(
+        ISPICKVAL({!$Record.Industry}, &quot;Technology&quot;),
+        ISPICKVAL({!$Record.Industry}, &quot;Finance&quot;),
+        ISPICKVAL({!$Record.Industry}, &quot;Healthcare&quot;)
+    ),
+    15,
+    5
+)
++
+IF(
+    OR(
+        ISPICKVAL({!$Record.LeadSource}, &quot;Referral&quot;),
+        ISPICKVAL({!$Record.LeadSource}, &quot;Partner&quot;)
+    ),
+    20,
+    IF(
+        OR(
+            ISPICKVAL({!$Record.LeadSource}, &quot;Web&quot;),
+            ISPICKVAL({!$Record.LeadSource}, &quot;Advertisement&quot;)
+        ),
+        10,
+        0
+    )
+)
++
+IF(
+    {!$Record.Email_Engaged__c},
+    20,
+    0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <interviewLabel>continue {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>continue</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Lead_Score</targetReference>
+        </connector>
+        <object>Lead</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

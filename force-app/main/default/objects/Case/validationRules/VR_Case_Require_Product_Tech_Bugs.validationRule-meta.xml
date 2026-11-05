@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VR_Case_Require_Product_Tech_Bugs</fullName>
+    <active>true</active>
+    <description>Pillar 3 Data Governance: Enforces that Customer Product is populated for Technical Support cases unless Type is Other.</description>
+    <errorConditionFormula>AND(
+  ISNEW(),
+  RecordType.DeveloperName = &apos;Technical_Support&apos;,
+  TEXT(Type) != &apos;Other&apos;,
+  ISBLANK(Customer_Product__c)
+)</errorConditionFormula>
+    <errorDisplayField>Customer_Product__c</errorDisplayField>
+    <errorMessage>Customer Product is mandatory when logging a Technical Support defect. Please select the customer&apos;s subscription product.</errorMessage>
+</ValidationRule>

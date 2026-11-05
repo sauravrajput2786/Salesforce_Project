@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VR_Case_Block_Critical_Downgrade</fullName>
+    <active>true</active>
+    <description>Prevents non-administrative support agents from downgrading Critical priority tickets, while allowing System Administrators to reclassify if necessary.</description>
+    <errorConditionFormula>AND(
+    NOT(ISNEW()),
+    $Profile.Name != &apos;System Administrator&apos;,
+    NOT($Permission.Bypass_Case_Lock),
+    TEXT(PRIORVALUE(Priority)) = &apos;Critical&apos;,
+    TEXT(Priority) != &apos;Critical&apos;
+)</errorConditionFormula>
+    <errorDisplayField>Priority</errorDisplayField>
+    <errorMessage>Rule Violation: Critical priority cases cannot be downgraded by support agents. Only System Administrators can reclassify a Critical priority incident.</errorMessage>
+</ValidationRule>

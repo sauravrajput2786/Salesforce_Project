@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Bug / Defect</fullName>
+        <default>false</default>
+        <label>Bug / Defect</label>
+    </standardValue>
+    <standardValue>
+        <fullName>System Outage</fullName>
+        <default>false</default>
+        <label>System Outage</label>
+    </standardValue>
+    <standardValue>
+        <fullName>API / Integration Issue</fullName>
+        <default>false</default>
+        <label>API / Integration Issue</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Invoice Inquiry</fullName>
+        <default>false</default>
+        <label>Invoice Inquiry</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Refund Request</fullName>
+        <default>false</default>
+        <label>Refund Request</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Subscription Charge</fullName>
+        <default>false</default>
+        <label>Subscription Charge</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Feature Guidance</fullName>
+        <default>false</default>
+        <label>Feature Guidance</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Account Configuration</fullName>
+        <default>false</default>
+        <label>Account Configuration</label>
+    </standardValue>
+    <standardValue>
+        <fullName>User Provisioning</fullName>
+        <default>false</default>
+        <label>User Provisioning</label>
+    </standardValue>
+    <standardValue>
+        <fullName>General Question</fullName>
+        <default>false</default>
+        <label>General Question</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Feedback</fullName>
+        <default>false</default>
+        <label>Feedback</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Onboarding</fullName>
+        <default>false</default>
+        <label>Onboarding</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Mechanical</fullName>
+        <default>false</default>
+        <label>Mechanical</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Electrical</fullName>
+        <default>false</default>
+        <label>Electrical</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Electronic</fullName>
+        <default>false</default>
+        <label>Electronic</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Structural</fullName>
+        <default>false</default>
+        <label>Structural</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <label>Other</label>
+    </standardValue>
+</StandardValueSet>

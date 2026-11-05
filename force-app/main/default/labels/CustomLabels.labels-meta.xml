@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>CSAT_Survey_Base_URL</fullName>
+        <categories>CSAT</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>CSAT Survey Base URL</shortDescription>
+        <value>https://orgfarm-610e5e144d-dev-ed.develop.my.site.com/customersupport/apex/CSATSurvey</value>
+    </labels>
+</CustomLabels>

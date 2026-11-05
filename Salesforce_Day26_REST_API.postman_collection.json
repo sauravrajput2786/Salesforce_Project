@@ -1,0 +1,180 @@
+{
+  "info": {
+    "_postman_id": "8f3b6c2d-9a4e-4e7b-b5d1-salesforce-day26",
+    "name": "Salesforce Day 26 - REST API Practice",
+    "description": "Pre-configured Postman Collection for Day 26 Salesforce REST API CRUD Operations (Lead, Account, Opportunity).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      { "key": "addTokenTo", "value": "header", "type": "string" },
+      { "key": "tokenType", "value": "Bearer", "type": "string" },
+      { "key": "accessToken", "value": "{{_accessToken}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. Create Lead [POST]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.collectionVariables.set('leadId', jsonData.id);",
+              "    console.log('Created Lead ID: ' + jsonData.id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"FirstName\": \"Rohan\",\n  \"LastName\": \"Mehta\",\n  \"Company\": \"NextGen Cloud Systems\",\n  \"Email\": \"rohan.mehta@testapi.com\",\n  \"Phone\": \"9876543210\",\n  \"Status\": \"Open - Not Contacted\"\n}"
+        },
+        "url": {
+          "raw": "{{_endpoint}}/services/data/v61.0/sobjects/Lead",
+          "host": ["{{_endpoint}}"],
+          "path": ["services", "data", "v61.0", "sobjects", "Lead"]
+        },
+        "description": "Creates a new Lead record in Salesforce via REST API POST."
+      }
+    },
+    {
+      "name": "2. Get Lead Details [GET]",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{_endpoint}}/services/data/v61.0/sobjects/Lead/{{leadId}}",
+          "host": ["{{_endpoint}}"],
+          "path": ["services", "data", "v61.0", "sobjects", "Lead", "{{leadId}}"]
+        },
+        "description": "Retrieves the created Lead record details by ID."
+      }
+    },
+    {
+      "name": "3. Update Lead Status [PATCH]",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Status\": \"Working - Contacted\",\n  \"Title\": \"VP Technology\",\n  \"Rating\": \"Hot\"\n}"
+        },
+        "url": {
+          "raw": "{{_endpoint}}/services/data/v61.0/sobjects/Lead/{{leadId}}",
+          "host": ["{{_endpoint}}"],
+          "path": ["services", "data", "v61.0", "sobjects", "Lead", "{{leadId}}"]
+        },
+        "description": "Updates specific fields on the Lead record without overwriting other fields."
+      }
+    },
+    {
+      "name": "4. Create Account [POST]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.collectionVariables.set('accountId', jsonData.id);",
+              "    console.log('Created Account ID: ' + jsonData.id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Name\": \"NextGen Cloud Systems Corp\",\n  \"Industry\": \"Technology\",\n  \"Type\": \"Prospect\",\n  \"Phone\": \"1234567890\",\n  \"BillingCity\": \"San Francisco\",\n  \"BillingCountry\": \"United States\"\n}"
+        },
+        "url": {
+          "raw": "{{_endpoint}}/services/data/v61.0/sobjects/Account",
+          "host": ["{{_endpoint}}"],
+          "path": ["services", "data", "v61.0", "sobjects", "Account"]
+        },
+        "description": "Creates an Account with valid validation rule fields (BillingCountry=United States, Type=Prospect)."
+      }
+    },
+    {
+      "name": "5. Create Opportunity [POST]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.collectionVariables.set('opportunityId', jsonData.id);",
+              "    console.log('Created Opportunity ID: ' + jsonData.id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Name\": \"NextGen Cloud - Enterprise Deal\",\n  \"AccountId\": \"{{accountId}}\",\n  \"StageName\": \"Prospecting\",\n  \"CloseDate\": \"2026-11-30\",\n  \"Amount\": 85000.00\n}"
+        },
+        "url": {
+          "raw": "{{_endpoint}}/services/data/v61.0/sobjects/Opportunity",
+          "host": ["{{_endpoint}}"],
+          "path": ["services", "data", "v61.0", "sobjects", "Opportunity"]
+        },
+        "description": "Creates an Opportunity linked to the created Account."
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "_endpoint",
+      "value": "https://orgfarm-610e5e144d-dev-ed.develop.my.salesforce.com",
+      "type": "string"
+    },
+    {
+      "key": "_accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "leadId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accountId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "opportunityId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
+

@@ -1,0 +1,124 @@
+<template>
+    <lightning-card title="Customer 360" icon-name="standard:account">
+        <!-- Refresh Action Button (Method 1) -->
+        <div slot="actions">
+            <lightning-button-icon
+                icon-name="utility:refresh"
+                alternative-text="Refresh Data"
+                title="Refresh Customer 360"
+                variant="border-filled"
+                onclick={handleRefresh}>
+            </lightning-button-icon>
+        </div>
+
+        <div class="slds-p-around_medium">
+
+            <!-- Loading State -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Error State -->
+            <template if:true={errorMessage}>
+                <p class="slds-text-color_error slds-text-body_small">{errorMessage}</p>
+            </template>
+
+            <!-- Data State -->
+            <template if:true={hasData}>
+
+                <!-- Account Info -->
+                <div class="slds-m-bottom_medium">
+                    <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">Account</p>
+                    <p class="slds-text-heading_small slds-m-bottom_xx-small">{accountName}</p>
+                    <p class="slds-text-body_small">Industry: {accountIndustry}</p>
+                    <p class="slds-text-body_small">Type: {accountType}</p>
+                    <p class="slds-text-body_small">Location: {accountLocation}</p>
+                    <template if:true={accountPhone}>
+                        <p class="slds-text-body_small">
+                            Phone: <lightning-formatted-phone value={accountPhone}></lightning-formatted-phone>
+                        </p>
+                    </template>
+                </div>
+
+                <hr class="slds-m-vertical_small" />
+
+                <!-- Contacts -->
+                <div class="slds-m-bottom_medium">
+                    <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">Contacts</p>
+                    <template if:true={hasContacts}>
+                        <ul class="slds-list_dotted">
+                            <template for:each={contacts} for:item="c">
+                                <li key={c.Id} class="slds-text-body_small">
+                                    {c.Name}
+                                    <template if:true={c.Title}>
+                                        <span class="slds-text-color_weak"> — {c.Title}</span>
+                                    </template>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template if:false={hasContacts}>
+                        <p class="slds-text-body_small slds-text-color_weak">No contacts found.</p>
+                    </template>
+                </div>
+
+                <hr class="slds-m-vertical_small" />
+
+                <!-- Open Opportunities -->
+                <div class="slds-m-bottom_medium">
+                    <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">
+                        Open Opportunities ({openOpportunitiesCount})
+                    </p>
+                    <template if:true={hasOpenOpportunities}>
+                        <ul class="slds-list_dotted">
+                            <template for:each={openOpportunities} for:item="opp">
+                                <li key={opp.Id} class="slds-text-body_small">
+                                    {opp.Name}
+                                    <template if:true={opp.Amount}>
+                                        &nbsp;&mdash;&nbsp;
+                                        <lightning-formatted-number
+                                            value={opp.Amount}
+                                            format-style="currency"
+                                            currency-code="USD">
+                                        </lightning-formatted-number>
+                                    </template>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template if:false={hasOpenOpportunities}>
+                        <p class="slds-text-body_small slds-text-color_weak">No open opportunities.</p>
+                    </template>
+                </div>
+
+                <hr class="slds-m-vertical_small" />
+
+                <!-- Closed Won Revenue -->
+                <div class="slds-m-bottom_medium">
+                    <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">Closed Won Revenue</p>
+                    <p class="slds-text-heading_medium revenue-text">{formattedRevenue}</p>
+                </div>
+
+                <hr class="slds-m-vertical_small" />
+
+                <!-- Purchased Products -->
+                <div>
+                    <p class="slds-text-title_caps slds-text-color_weak slds-m-bottom_xx-small">Purchased Products</p>
+                    <template if:true={hasPurchasedProducts}>
+                        <ul class="slds-list_dotted">
+                            <template for:each={purchasedProducts} for:item="product">
+                                <li key={product} class="slds-text-body_small">{product}</li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template if:false={hasPurchasedProducts}>
+                        <p class="slds-text-body_small slds-text-color_weak">No products purchased yet.</p>
+                    </template>
+                </div>
+
+            </template>
+        </div>
+    </lightning-card>
+</template>

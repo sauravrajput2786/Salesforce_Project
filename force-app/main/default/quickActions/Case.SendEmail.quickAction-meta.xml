@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldOverrides>
+        <field>ToIds</field>
+        <formula>Case.ContactId</formula>
+    </fieldOverrides>
+    <fieldOverrides>
+        <field>Subject</field>
+        <formula><![CDATA["Thank you for raising your concern - [Case #" + Case.CaseNumber + "]: " + Case.Subject]]></formula>
+    </fieldOverrides>
+    <fieldOverrides>
+        <field>HtmlBody</field>
+        <formula><![CDATA["<div style='font-family: Arial, sans-serif; color: #1e293b; line-height: 1.6; max-width: 650px;'>" +
+"<div style='background-color: #0176D3; padding: 14px 20px; color: #ffffff; border-radius: 6px 6px 0 0;'>" +
+"<h3 style='margin: 0; font-size: 18px;'>ABC Service Cloud</h3>" +
+"<span style='font-size: 12px; color: #e0f2fe;'>Customer Support & Incident Management</span>" +
+"</div>" +
+"<div style='padding: 20px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 6px 6px;'>" +
+"<p style='margin-top: 0;'>Dear <b>Customer</b>,</p>" +
+"<p>Thank you for raising your concern with ABC Service Cloud Support. We have received your inquiry, and our support engineering team is actively working on resolving it.</p>" +
+"<div style='background-color: #f8fafc; border-left: 4px solid #0176D3; padding: 12px 16px; margin: 16px 0;'>" +
+"<p style='margin: 0; color: #334155; font-style: italic;'>[Type your update or resolution details here...]</p>" +
+"</div>" +
+"<table style='width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; background-color: #f1f5f9; border-radius: 4px;'>" +
+"<tr><td style='padding: 8px 12px; color: #64748b; width: 30%;'><b>Case Number:</b></td><td style='padding: 8px 12px; color: #1e293b;'><b>" + Case.CaseNumber + "</b></td></tr>" +
+"<tr><td style='padding: 8px 12px; color: #64748b;'><b>Subject:</b></td><td style='padding: 8px 12px; color: #1e293b;'>" + Case.Subject + "</td></tr>" +
+"<tr><td style='padding: 8px 12px; color: #64748b;'><b>Priority:</b></td><td style='padding: 8px 12px; color: #1e293b;'>" + TEXT(Case.Priority) + "</td></tr>" +
+"<tr><td style='padding: 8px 12px; color: #64748b;'><b>Status:</b></td><td style='padding: 8px 12px; color: #1e293b;'>" + TEXT(Case.Status) + "</td></tr>" +
+"</table>" +
+"<p style='margin-top: 20px; font-size: 13px; color: #334155;'>Best regards,<br/><b>ABC Service Cloud Support Team</b><br/><span style='font-size: 11px; color: #64748b;'>Global Customer Operations</span></p>" +
+"<hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0 12px 0;' />" +
+"<p style='margin: 0; font-size: 11px; color: #94a3b8; text-align: center;'>This is an official communication regarding your support incident with ABC Service Cloud.<br/>Please reply directly to this email to add more details or updates to your case.</p>" +
+"</div></div>"]]></formula>
+    </fieldOverrides>
+    <optionsCreateFeedItem>true</optionsCreateFeedItem>
+    <quickActionLayout>
+        <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>ValidatedFromAddress</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>ToAddress</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>CcAddress</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>BccAddress</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Subject</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>HtmlBody</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
+        <quickActionLayoutColumns/>
+    </quickActionLayout>
+    <standardLabel>SendEmail</standardLabel>
+    <targetObject>EmailMessage</targetObject>
+    <targetParentField>Parent</targetParentField>
+    <type>SendEmail</type>
+</QuickAction>

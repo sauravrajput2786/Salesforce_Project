@@ -1,0 +1,10 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+<html>
+<body style="font-family: sans-serif; text-align: center; padding: 60px;">
+    <h1 style="color: #0176d3;">ABC Customer Support</h1>
+    <p style="font-size: 18px; color: #334155;">Hello! Site is working correctly.</p>
+    <p style="font-size: 13px; color: #64748b;">Rendered at: <apex:outputText value="{!NOW()}"/></p>
+</body>
+</html>
+</apex:page>
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Loan</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Loans</value>
+    </caseValues>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Due Date Cannot Be Empty If Member is allocated --></errorMessage>
+        <name>Due_Date_Cannot_Be_Empty</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Due Date Cannot Be In Past --></errorMessage>
+        <name>Due_Date_Cannot_Be_Past</name>
+    </validationRules>
+</CustomObjectTranslation>

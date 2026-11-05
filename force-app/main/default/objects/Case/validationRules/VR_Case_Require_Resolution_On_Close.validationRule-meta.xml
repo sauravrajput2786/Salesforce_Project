@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VR_Case_Require_Resolution_On_Close</fullName>
+    <active>true</active>
+    <description>Enforces that Resolution Type and Resolution Summary must be provided when a Case is marked Closed.</description>
+    <errorConditionFormula>AND(
+    ISPICKVAL(Status, &apos;Closed&apos;),
+    OR(
+        ISBLANK(TEXT(Resolution_Type__c)),
+        ISBLANK(Resolution_Summary__c)
+    )
+)</errorConditionFormula>
+    <errorMessage>Resolution Type and Resolution Summary are mandatory when closing a case. Please explain how the issue was resolved.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resolution_Type__c</fullName>
+    <description>Action taken to successfully resolve the case.</description>
+    <label>Resolution Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bug Fix / Hotfix Patch</fullName>
+                <default>false</default>
+                <label>Bug Fix / Hotfix Patch</label>
+            </value>
+            <value>
+                <fullName>Configuration / Permission Change</fullName>
+                <default>false</default>
+                <label>Configuration / Permission Change</label>
+            </value>
+            <value>
+                <fullName>User Guidance / Knowledge Article</fullName>
+                <default>false</default>
+                <label>User Guidance / Knowledge Article</label>
+            </value>
+            <value>
+                <fullName>Workaround Provided</fullName>
+                <default>false</default>
+                <label>Workaround Provided</label>
+            </value>
+            <value>
+                <fullName>No Action Required</fullName>
+                <default>false</default>
+                <label>No Action Required</label>
+            </value>
+            <value>
+                <fullName>Duplicate Ticket</fullName>
+                <default>false</default>
+                <label>Duplicate Ticket</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

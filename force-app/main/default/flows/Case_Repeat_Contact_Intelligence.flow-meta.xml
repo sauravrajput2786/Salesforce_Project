@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Customer_FollowUp_Confirmation</name>
+        <label>Send Customer FollowUp Confirmation</label>
+        <locationX>20</locationX>
+        <locationY>720</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>fx_CustomerEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>fx_EmailSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>tt_CustomerConfirmationEmail</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Check_If_Sibling_Found</name>
+        <label>Check If Sibling Found</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <defaultConnectorLabel>Unique Fresh Issue</defaultConnectorLabel>
+        <rules>
+            <name>Sibling_Repeat_Case_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Open_Sibling_Case</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_New_Case_As_Repeat</targetReference>
+            </connector>
+            <label>Sibling Repeat Case Found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_Has_Customer_Email</name>
+        <label>Decision Has Customer Email</label>
+        <locationX>50</locationX>
+        <locationY>600</locationY>
+        <defaultConnectorLabel>Skip Email Gracefully</defaultConnectorLabel>
+        <rules>
+            <name>Has_Valid_Email</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>fx_CustomerEmail</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>fx_CustomerEmail</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Customer_FollowUp_Confirmation</targetReference>
+            </connector>
+            <label>Has Valid Email</label>
+        </rules>
+    </decisions>
+    <description>Enterprise Repeat Contact Intelligence: Smoothly accepts new customer cases, dynamically links sibling follow-ups to the root primary case (matching Account, Product, RecordType, and Type on open cases), bumps priority to High, and alerts the primary case feed.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>fx_CustomerEmail</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE({!$Record.Contact.Email}, {!$Record.SuppliedEmail})</expression>
+    </formulas>
+    <formulas>
+        <name>fx_EmailSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;[Update on Case #&quot; + {!$Record.CaseNumber} + &quot;] Received &amp;amp; Linked to Active Investigation #&quot; + {!Get_Open_Sibling_Case.CaseNumber}</expression>
+    </formulas>
+    <formulas>
+        <name>fx_RootCaseId</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE({!Get_Open_Sibling_Case.Related_Open_Case__c}, {!Get_Open_Sibling_Case.Id})</expression>
+    </formulas>
+    <interviewLabel>Case Repeat Contact Intelligence {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case Repeat Contact Intelligence</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Post_Chatter_Alert_To_Root_Case</name>
+        <label>Post Chatter Alert To Root Case</label>
+        <locationX>50</locationX>
+        <locationY>480</locationY>
+        <connector>
+            <targetReference>Decision_Has_Customer_Email</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Body</field>
+            <value>
+                <elementReference>tt_PrimaryCaseChatterAlert</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ParentId</field>
+            <value>
+                <elementReference>fx_RootCaseId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>FeedItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_Open_Sibling_Case</name>
+        <label>Get Open Sibling Case</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_If_Sibling_Found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.AccountId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Customer_Product__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Customer_Product__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>RecordTypeId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.RecordTypeId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Type</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsClosed</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Case</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_New_Case_As_Repeat</name>
+        <label>Update New Case As Repeat</label>
+        <locationX>50</locationX>
+        <locationY>360</locationY>
+        <connector>
+            <targetReference>Update_Root_Case_Priority_To_High</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Is_Repeat_Contact__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Related_Open_Case__c</field>
+            <value>
+                <elementReference>fx_RootCaseId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Case</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Root_Case_Priority_To_High</name>
+        <label>Update Root Case Priority To High</label>
+        <locationX>50</locationX>
+        <locationY>420</locationY>
+        <connector>
+            <targetReference>Post_Chatter_Alert_To_Root_Case</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>fx_RootCaseId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Case</object>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Open_Sibling_Case</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Customer_Product__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsClosed</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>tt_CustomerConfirmationEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Dear Customer,
+
+We have received your support request regarding: &quot;{!$Record.Subject}&quot; (Case #{!$Record.CaseNumber}).
+
+Our technical team is already actively investigating this product under your active Case #{!Get_Open_Sibling_Case.CaseNumber} (Status: {!Get_Open_Sibling_Case.Status}).
+
+We have attached your latest details directly to your active investigation so our engineering team has full context. Because your issue is ongoing, we have prioritized your request.
+
+You can track your issue under your primary Case #{!Get_Open_Sibling_Case.CaseNumber}.
+
+Thank you for your patience!
+TechNova Intelligent Cloud Support Team</text>
+    </textTemplates>
+    <textTemplates>
+        <name>tt_PrimaryCaseChatterAlert</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>[Customer Repeat Follow-up] Customer submitted additional Case #{!$Record.CaseNumber}.
+Subject: {!$Record.Subject}
+Type: {!$Record.Type}
+Description: {!$Record.Description}
+
+Priority bumped to High. Linked to this active investigation.</text>
+    </textTemplates>
+</Flow>

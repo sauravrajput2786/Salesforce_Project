@@ -1,0 +1,59 @@
+.health-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.health-number {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #181818;
+}
+
+.health-unit {
+    font-size: 0.65rem;
+    color: #706e6b;
+    line-height: 1;
+}
+
+.badge-healthy {
+    background-color: #eefbf3;
+    color: #04844b;
+    font-weight: 700;
+    border: 1px solid #04844b;
+    padding: 4px 10px;
+}
+
+.badge-warning {
+    background-color: #fff9e6;
+    color: #b25e00;
+    font-weight: 700;
+    border: 1px solid #fe9339;
+    padding: 4px 10px;
+}
+
+.badge-critical {
+    background-color: #fef1ee;
+    color: #ea001e;
+    font-weight: 700;
+    border: 1px solid #ea001e;
+    padding: 4px 10px;
+}
+
+.text-risks-title {
+    font-size: 0.7rem;
+    color: #706e6b;
+    letter-spacing: 0.5px;
+}
+
+.risk-item {
+    color: #3e3e3c;
+}
+

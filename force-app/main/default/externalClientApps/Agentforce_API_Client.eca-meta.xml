@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalClientApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>saurav.elsner@gmail.com</contactEmail>
+    <distributionState>Local</distributionState>
+    <isProtected>false</isProtected>
+    <label>Agentforce_API_Client</label>
+    <orgScopedExternalApp>00Daj000016E5vO:Agentforce_API_Client</orgScopedExternalApp>
+</ExternalClientApplication>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VR_Case_Lock_Customer_And_SLA_Data</fullName>
+    <active>true</active>
+    <description>Prevents unauthorized agent modification of intake and SLA metrics, with Custom Permission bypass and initial CSAT survey response exemption.</description>
+    <errorConditionFormula>AND(
+    NOT($Permission.Bypass_Case_Lock),
+    NOT(ISNEW()),
+    OR(
+        ISCHANGED(AccountId),
+        ISCHANGED(ContactId),
+        ISCHANGED(EntitlementId),
+        ISCHANGED(Origin),
+        ISCHANGED(Customer_Product__c),
+        AND(
+            ISCHANGED(Customer_Rating__c),
+            NOT(ISBLANK(TEXT(PRIORVALUE(Customer_Rating__c))))
+        ),
+        AND(
+            ISCHANGED(Feedback_Comments__c),
+            NOT(ISBLANK(PRIORVALUE(Feedback_Comments__c)))
+        ),
+        ISCHANGED(SLA_Breached__c),
+        ISCHANGED(SLAViolation__c),
+        ISCHANGED(Reopened_Count__c)
+    )
+)</errorConditionFormula>
+    <errorMessage>Rule Violation: Customer intake data (Account, Contact, Origin, Product), CSAT ratings/feedback, and System SLA metrics cannot be modified or removed by agents.</errorMessage>
+</ValidationRule>

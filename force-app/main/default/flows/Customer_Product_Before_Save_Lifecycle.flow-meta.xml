@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_Default_Dates</name>
+        <label>Assign Default Purchase &amp; Renewal Dates</label>
+        <locationX>176</locationX>
+        <locationY>287</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Purchase_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>formula_DefaultPurchaseDate</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Renewal_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>formula_DefaultRenewalDate</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>Before-Save Flow on Customer_Product__c that sets Purchase_Date__c = TODAY and Renewal_Date__c = TODAY + 365 Days on creation if blank.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>formula_DefaultPurchaseDate</name>
+        <dataType>Date</dataType>
+        <expression>IF(ISBLANK({!$Record.Purchase_Date__c}), {!$Flow.CurrentDate}, {!$Record.Purchase_Date__c})</expression>
+    </formulas>
+    <formulas>
+        <name>formula_DefaultRenewalDate</name>
+        <dataType>Date</dataType>
+        <expression>IF(ISBLANK({!$Record.Renewal_Date__c}), {!$Flow.CurrentDate} + 365, {!$Record.Renewal_Date__c})</expression>
+    </formulas>
+    <interviewLabel>Customer Product Before Save Lifecycle {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Customer Product Before Save Lifecycle</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Default_Dates</targetReference>
+        </connector>
+        <object>Customer_Product__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

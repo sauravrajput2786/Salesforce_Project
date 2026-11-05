@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Owner_Notification_Email</name>
+        <label>Send Notification Email to Owner</label>
+        <locationX>176</locationX>
+        <locationY>647</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Owner.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>textTemplate_EmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>formula_EmailSubject</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <apiVersion>61.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Decision_Is_Deal_Stalled</name>
+        <label>Is Deal Stalled (No Activity for 7+ Days)?</label>
+        <locationX>374</locationX>
+        <locationY>242</locationY>
+        <defaultConnectorLabel>Recently Active (Skip)</defaultConnectorLabel>
+        <rules>
+            <name>Outcome_Deal_Is_Stalled</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_IsStalled</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Existing_Open_Task</targetReference>
+            </connector>
+            <label>Stalled (7+ Days Inactive)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_Open_Task_Exists</name>
+        <label>Does Open Follow-Up Task Already Exist?</label>
+        <locationX>242</locationX>
+        <locationY>446</locationY>
+        <defaultConnectorLabel>Open Task Exists (Prevent Duplicate)</defaultConnectorLabel>
+        <rules>
+            <name>Outcome_No_Open_Task</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Existing_Open_Task.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Followup_Task</targetReference>
+            </connector>
+            <label>No Open Task (Proceed)</label>
+        </rules>
+    </decisions>
+    <description>Daily Scheduled Flow on open Opportunities that identifies stalled deals with no activity for 7+ days, prevents duplicate follow-up tasks, creates a Task for the Opportunity Owner, and sends an email notification.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>formula_EmailSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Action Required: Stalled Deal Follow-Up - &quot; &amp; {!$Record.Name}</expression>
+    </formulas>
+    <formulas>
+        <name>formula_ErrorTaskSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;ERROR: Opportunity Scheduled Follow-Up Flow Failed for &quot; &amp; {!$Record.Name}</expression>
+    </formulas>
+    <formulas>
+        <name>formula_IsStalled</name>
+        <dataType>Boolean</dataType>
+        <expression>IF(ISBLANK({!$Record.LastActivityDate}), DATEVALUE({!$Record.CreatedDate}) &lt;= {!formula_SevenDaysAgo}, {!$Record.LastActivityDate} &lt;= {!formula_SevenDaysAgo})</expression>
+    </formulas>
+    <formulas>
+        <name>formula_SevenDaysAgo</name>
+        <dataType>Date</dataType>
+        <expression>{!$Flow.CurrentDate} - 7</expression>
+    </formulas>
+    <formulas>
+        <name>formula_TaskDueDate</name>
+        <dataType>Date</dataType>
+        <expression>{!$Flow.CurrentDate} + 2</expression>
+    </formulas>
+    <formulas>
+        <name>formula_TaskSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Follow up on stalled deal: &quot; &amp; {!$Record.Name}</expression>
+    </formulas>
+    <interviewLabel>Opportunity Scheduled Follow-Up Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Opportunity Scheduled Follow-Up Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Create_Error_Log_Task</name>
+        <label>Log Flow Error via Task</label>
+        <locationX>440</locationX>
+        <locationY>647</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.OwnerId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <elementReference>formula_ErrorTaskSubject</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Followup_Task</name>
+        <label>Create Follow-Up Task</label>
+        <locationX>176</locationX>
+        <locationY>548</locationY>
+        <connector>
+            <targetReference>Send_Owner_Notification_Email</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Create_Error_Log_Task</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>formula_TaskDueDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <stringValue>This opportunity has had no activity for 7+ days. Please follow up with the client to advance the deal.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.OwnerId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <elementReference>formula_TaskSubject</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_Existing_Open_Task</name>
+        <label>Get Existing Open Task</label>
+        <locationX>242</locationX>
+        <locationY>344</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Decision_Open_Task_Exists</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>IsClosed</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>WhatId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Decision_Is_Deal_Stalled</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>IsClosed</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Opportunity</object>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2026-09-20</startDate>
+            <startTime>08:00:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>textTemplate_EmailBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Hello,
+
+This is an automated follow-up reminder for Opportunity: {!$Record.Name} (Account: {!$Record.Account.Name}).
+
+This deal has had no logged activity for 7 or more days. A follow-up task has been assigned to you in Salesforce.
+
+Details:
+- Stage: {!$Record.StageName}
+- Amount: {!$Record.Amount}
+- Close Date: {!$Record.CloseDate}
+
+Please review the record and reach out to the customer to keep the opportunity moving forward.
+
+Thank you,
+Sales Automation Flow</text>
+    </textTemplates>
+</Flow>

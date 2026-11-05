@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotificationType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>Case_Escalation_Alert</customNotifTypeName>
+    <description>Bell notification sent to support managers when cases remain unresolved past escalation thresholds.</description>
+    <desktop>true</desktop>
+    <masterLabel>Case Escalation Alert</masterLabel>
+    <mobile>true</mobile>
+    <slack>false</slack>
+</CustomNotificationType>
+

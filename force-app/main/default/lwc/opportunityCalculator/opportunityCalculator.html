@@ -1,0 +1,91 @@
+<template>
+    <lightning-card title="Opportunity Deal Calculator" icon-name="standard:quotes">
+        <div slot="actions">
+            <lightning-button 
+                label="Reset" 
+                icon-name="utility:refresh" 
+                variant="neutral" 
+                onclick={handleReset}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading Products" size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:false={isLoading}>
+                <!-- Product Selector -->
+                <div class="slds-m-bottom_small">
+                    <lightning-combobox
+                        name="productSelect"
+                        label="Select Product"
+                        value={selectedProductId}
+                        placeholder="Choose a product from catalog"
+                        options={productOptions}
+                        onchange={handleProductChange}
+                        required>
+                    </lightning-combobox>
+                </div>
+
+                <!-- Input Grid: Quantity, Unit Price, Discount -->
+                <div class="slds-grid slds-wrap slds-gutters_x-small slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-input 
+                            type="number" 
+                            label="Quantity" 
+                            min="1" 
+                            step="1" 
+                            value={quantity} 
+                            onchange={handleQuantityChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-input 
+                            type="number" 
+                            label="Unit Price ($)" 
+                            formatter="currency" 
+                            step="0.01" 
+                            min="0" 
+                            value={unitPrice} 
+                            onchange={handleUnitPriceChange}
+                            required>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-input 
+                            type="number" 
+                            label="Discount (%)" 
+                            min="0" 
+                            max="100" 
+                            step="1" 
+                            value={discountPercent} 
+                            onchange={handleDiscountChange}>
+                        </lightning-input>
+                    </div>
+                </div>
+
+                <!-- Calculation Summary Section -->
+                <div class="calc-summary-box slds-p-around_small slds-m-top_small">
+                    <div class="summary-row slds-grid slds-grid_align-spread slds-m-bottom_xx-small">
+                        <span class="slds-text-body_regular slds-text-color_weak">Subtotal</span>
+                        <span class="slds-text-body_regular">{formattedSubtotal}</span>
+                    </div>
+                    <div class="summary-row slds-grid slds-grid_align-spread slds-m-bottom_xx-small discount-row">
+                        <span class="slds-text-body_regular slds-text-color_weak">Discount ({discountPercent}%)</span>
+                        <span class="slds-text-body_regular discount-val">-{formattedDiscountAmount}</span>
+                    </div>
+                    <div class="summary-divider slds-m-vertical_xx-small"></div>
+                    <div class="summary-row slds-grid slds-grid_align-spread total-row">
+                        <span class="slds-text-title_bold total-label">Estimated Total</span>
+                        <span class="slds-text-heading_small total-amount">{formattedTotal}</span>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

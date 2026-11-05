@@ -1,0 +1,37 @@
+:host {
+    display: block;
+}
+
+.calc-summary-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+}
+
+.summary-row {
+    font-size: 0.875rem;
+}
+
+.discount-val {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.summary-divider {
+    border-top: 1px dashed #cbd5e1;
+}
+
+.total-row {
+    align-items: center;
+    padding-top: 0.25rem;
+}
+
+.total-label {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.total-amount {
+    color: #0b5cab;
+    font-weight: 800;
+}

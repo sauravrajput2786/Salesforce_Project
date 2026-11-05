@@ -1,0 +1,28 @@
+.card-content {
+    position: relative;
+    min-height: 180px;
+}
+
+.kpi-card {
+    border-radius: 4px;
+    background-color: #f3f3f3;
+}
+
+.kpi-value {
+    font-weight: 700;
+    color: #0176d3;
+}
+
+.stage-row {
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 4px;
+}
+
+.stage-row:hover {
+    background-color: #fbfbfb;
+}
+
+.stage-amount {
+    color: #080707;
+}
+

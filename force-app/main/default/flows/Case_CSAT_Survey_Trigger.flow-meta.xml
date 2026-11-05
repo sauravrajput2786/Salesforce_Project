@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_CSAT_Survey_Email</name>
+        <label>Send CSAT Survey Email</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Contact.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>We value your feedback - Case #{!$Record.CaseNumber}: {!$Record.Subject}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>tt_CSAT_Email_Body</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>Automated Customer CSAT Survey trigger firing upon Case closure (Status = Closed) generating a secure survey token and sending rich HTML feedback invitation.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>fml_CustomerGreeting</name>
+        <dataType>String</dataType>
+        <expression>IF(NOT(ISBLANK({!$Record.Contact.FirstName})), {!$Record.Contact.FirstName}, IF(NOT(ISBLANK({!$Record.Contact.LastName})), {!$Record.Contact.LastName}, &quot;Valued Customer&quot;))</expression>
+    </formulas>
+    <formulas>
+        <name>fml_SurveyFullUrl</name>
+        <dataType>String</dataType>
+        <expression>{!$Label.CSAT_Survey_Base_URL} &amp; &quot;?token=&quot; &amp; {!fml_SurveyToken}</expression>
+    </formulas>
+    <formulas>
+        <name>fml_SurveyToken</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!$Record.Survey_Token__c}), CASESAFEID({!$Record.Id}) &amp; &quot;-&quot; &amp; SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(TEXT({!$Flow.CurrentDateTime}), &quot;-&quot;, &quot;&quot;), &quot; &quot;, &quot;&quot;), &quot;:&quot;, &quot;&quot;), &quot;Z&quot;, &quot;&quot;), {!$Record.Survey_Token__c})</expression>
+    </formulas>
+    <interviewLabel>Case CSAT Survey Trigger {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case CSAT Survey Trigger</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Set_Token_And_Mark_CSAT_Sent</name>
+        <label>Set Token and Mark CSAT Sent</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <connector>
+            <targetReference>Send_CSAT_Survey_Email</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>CSAT_Sent__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Survey_Token__c</field>
+            <value>
+                <elementReference>fml_SurveyToken</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Token_And_Mark_CSAT_Sent</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>CSAT_Sent__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>ContactId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>tt_CSAT_Email_Body</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;/&gt;
+&lt;/head&gt;
+&lt;body style=&quot;font-family: -apple-system, BlinkMacSystemFont, &apos;Segoe UI&apos;, Roboto, Helvetica, Arial, sans-serif; color: #1e293b; background-color: #f8fafc; margin: 0; padding: 24px;&quot;&gt;
+    &lt;div style=&quot;max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;&quot;&gt;
+        &lt;div style=&quot;background: #0176d3; padding: 24px; color: #ffffff;&quot;&gt;
+            &lt;h1 style=&quot;margin: 0; font-size: 20px; font-weight: 600;&quot;&gt;ABC Customer Support&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;padding: 28px 24px;&quot;&gt;
+            &lt;p style=&quot;font-size: 15px; line-height: 1.6; margin-bottom: 16px;&quot;&gt;Dear {!fml_CustomerGreeting},&lt;/p&gt;
+            &lt;p style=&quot;font-size: 15px; line-height: 1.6; color: #334155; margin-bottom: 24px;&quot;&gt;
+                Your support inquiry &lt;strong&gt;Case #{!$Record.CaseNumber}&lt;/strong&gt; has been resolved. We are committed to providing exceptional service and would appreciate your feedback.
+            &lt;/p&gt;
+            
+            &lt;div style=&quot;text-align: center; margin: 32px 0;&quot;&gt;
+                &lt;a href=&quot;{!fml_SurveyFullUrl}&quot; style=&quot;display: inline-block; background-color: #0176d3; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-weight: 600; font-size: 15px;&quot;&gt;
+                    Rate Your Experience &amp;amp; Give Feedback
+                &lt;/a&gt;
+            &lt;/div&gt;
+
+            &lt;p style=&quot;font-size: 13px; color: #64748b; line-height: 1.5; margin-top: 24px;&quot;&gt;
+                Your feedback helps us continuously improve our service quality and support processes.
+            &lt;/p&gt;
+            &lt;p style=&quot;font-size: 14px; color: #334155; margin-top: 20px;&quot;&gt;
+                Thank you for partnering with ABC Cloud Services.
+            &lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;background: #f1f5f9; padding: 14px 24px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;&quot;&gt;
+            ABC Cloud Services &amp;bull; Enterprise SLA &amp;amp; Customer Success
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+</Flow>

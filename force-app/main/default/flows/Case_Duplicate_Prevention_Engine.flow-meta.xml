@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>Deactivated in favor of Case_Repeat_Contact_Intelligence to eliminate restricted picklist snag errors and provide smooth customer intake.</description>
+    <environments>Default</environments>
+    <interviewLabel>Case Duplicate Prevention Engine Deactivated {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case Duplicate Prevention Engine (Deactivated)</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <object>Case</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>InvalidDraft</status>
+</Flow>

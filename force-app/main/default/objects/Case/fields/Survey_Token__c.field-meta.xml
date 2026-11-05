@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Survey_Token__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>Cryptographically unguessable GUID token for authenticating public CSAT survey submissions without exposing Case record IDs.</description>
+    <externalId>true</externalId>
+    <inlineHelpText>Unique token used to access the customer feedback survey.</inlineHelpText>
+    <label>Survey Token</label>
+    <length>100</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

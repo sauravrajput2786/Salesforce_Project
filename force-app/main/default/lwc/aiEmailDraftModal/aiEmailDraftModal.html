@@ -1,0 +1,85 @@
+<template>
+    <lightning-quick-action-panel header="AI Email & Proposal Drafter">
+        <template if:true={isLoading}>
+            <div class="slds-p-around_large slds-align_absolute-center">
+                <lightning-spinner alternative-text="Synthesizing personalized email draft..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <div class="slds-p-around_small">
+                <!-- Draft Type & Refresh Row -->
+                <div class="slds-grid slds-gutters slds-grid_vertical-align-end slds-m-bottom_small">
+                    <div class="slds-col slds-size_2-of-3">
+                        <lightning-combobox
+                            name="draftType"
+                            label="Draft Objective"
+                            value={selectedType}
+                            options={draftTypeOptions}
+                            onchange={handleTypeChange}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-button
+                            label="Regenerate"
+                            icon-name="utility:refresh"
+                            onclick={loadDraft}
+                            class="slds-m-left_x-small">
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <!-- Recipient Email -->
+                <div class="slds-m-bottom_small">
+                    <lightning-input
+                        label="Recipient Email"
+                        type="email"
+                        value={recipientEmail}
+                        onchange={handleEmailChange}
+                        required>
+                    </lightning-input>
+                </div>
+
+                <!-- Email Subject -->
+                <div class="slds-m-bottom_small">
+                    <lightning-input
+                        label="Subject Line"
+                        value={subject}
+                        onchange={handleSubjectChange}
+                        required>
+                    </lightning-input>
+                </div>
+
+                <!-- Email Body -->
+                <div class="slds-m-bottom_small">
+                    <lightning-textarea
+                        label="AI Tailored Body (Editable)"
+                        value={body}
+                        rows="8"
+                        onchange={handleBodyChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+            </div>
+        </template>
+
+        <div slot="footer">
+            <lightning-button
+                label="Copy to Clipboard"
+                icon-name="utility:copy"
+                variant="neutral"
+                onclick={handleCopy}
+                disabled={isLoading}>
+            </lightning-button>
+            <lightning-button
+                label="Send Email"
+                icon-name="utility:send"
+                variant="brand"
+                onclick={handleSend}
+                disabled={isLoading}
+                class="slds-m-left_small">
+            </lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>
+

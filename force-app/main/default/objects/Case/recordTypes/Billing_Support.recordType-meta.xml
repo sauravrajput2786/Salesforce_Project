@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Billing_Support</fullName>
+    <active>true</active>
+    <businessProcess>Billing_Support_Process</businessProcess>
+    <description>For payment queries, invoice requests, subscription charges, and refunds.</description>
+    <label>Billing Support</label>
+    <picklistValues>
+        <picklist>Customer_Rating__c</picklist>
+        <values>
+            <fullName>1 - Very Poor</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2 - Poor</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3 - Average</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>4 - Good</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5 - Excellent</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Escalation_Reason__c</picklist>
+        <values>
+            <fullName>Customer Dissatisfaction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Management Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SLA Breach Risk</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Technical Complexity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unresponsive External Vendor</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Issue_Category__c</picklist>
+        <values>
+            <fullName>Access %2F Security</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Billing Support</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General Inquiry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product Guidance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Technical Support</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Issue_Sub_Category__c</picklist>
+        <values>
+            <fullName>API %2F Webhook Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Application Crash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Configuration Assistance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Documentation Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Feature Walkthrough</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General Question</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Invoice Discrepancy</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Password Reset %2F SSO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Performance %2F Latency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Permission Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Refund Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Subscription Charge</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Origin</picklist>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Web</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>PotentialLiability__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>Critical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Product__c</picklist>
+        <values>
+            <fullName>GC1020</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC1040</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC1060</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC3020</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC3040</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC3060</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC5020</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC5040</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GC5060</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason</picklist>
+        <values>
+            <fullName>Breakdown</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Equipment Complexity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Equipment Design</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Feedback</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Installation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Performance</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Region__c</picklist>
+        <values>
+            <fullName>Asia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Europe</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>North America</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Resolution_Type__c</picklist>
+        <values>
+            <fullName>Bug Fix %2F Hotfix Patch</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Configuration %2F Permission Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Action Required</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Guidance %2F Knowledge Article</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Workaround Provided</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Root_Cause__c</picklist>
+        <values>
+            <fullName>Code Defect %2F Bug</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Data Inconsistency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Expected System Behavior</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Infrastructure %2F Cloud Outage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Third-Party Dependency Failure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Configuration Error</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>SLAViolation__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Invoice Inquiry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Refund Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Subscription Charge</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

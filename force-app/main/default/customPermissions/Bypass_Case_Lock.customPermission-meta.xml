@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Allows authorized system integrations or data migration administrators to bypass the Case intake and SLA data lock validation rule.</description>
+    <isLicensed>false</isLicensed>
+    <label>Bypass Case Lock</label>
+</CustomPermission>

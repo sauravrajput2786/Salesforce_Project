@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Workaround_Email_To_Customer</name>
+        <label>Send Workaround Email To Customer</label>
+        <locationX>88</locationX>
+        <locationY>1080</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Loop_Known_Issues</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>fx_CustomerEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>fx_EmailSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>tt_CustomerEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Check_If_Known_Issues_Found</name>
+        <label>Check If Known Issues Found</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <defaultConnectorLabel>None Found</defaultConnectorLabel>
+        <rules>
+            <name>Has_Active_Known_Issues</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Active_Known_Issues</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Loop_Known_Issues</targetReference>
+            </connector>
+            <label>Has Active Known Issues</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_Has_Email_And_Workaround</name>
+        <label>Decision Has Email And Workaround</label>
+        <locationX>220</locationX>
+        <locationY>960</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Known_Issues</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Email or Workaround</defaultConnectorLabel>
+        <rules>
+            <name>Has_Email_And_Workaround</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>fx_CustomerEmail</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>fx_CustomerEmail</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Loop_Known_Issues.Workaround__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Workaround_Email_To_Customer</targetReference>
+            </connector>
+            <label>Has Email And Workaround</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_Is_Technical_Match</name>
+        <label>Decision Is Technical Match</label>
+        <locationX>484</locationX>
+        <locationY>360</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Known_Issues</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Match</defaultConnectorLabel>
+        <rules>
+            <name>Is_504_Timeout_Match</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>fx_Is504TimeoutMatch</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Check_Existing_Junction</targetReference>
+            </connector>
+            <label>Is 504 Timeout Match</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_Junction_Exists</name>
+        <label>Decision Junction Exists</label>
+        <locationX>352</locationX>
+        <locationY>600</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Known_Issues</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Already Linked</defaultConnectorLabel>
+        <rules>
+            <name>Junction_Does_Not_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Check_Existing_Junction</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Case_Known_Issue_Junction</targetReference>
+            </connector>
+            <label>Junction Does Not Exist</label>
+        </rules>
+    </decisions>
+    <description>Pillar 3: AI Defect &amp; Known Issue Linker. On Case create/update, dynamically matches active Known Issues based on keywords (504, Timeout, Outage) in Subject or Description, creates Case_Known_Issue__c junction record, posts the workaround to Chatter feed, and sends an automated workaround email to the customer contact.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>fx_CustomerEmail</name>
+        <dataType>String</dataType>
+        <expression>BLANKVALUE({!$Record.Contact.Email}, {!$Record.SuppliedEmail})</expression>
+    </formulas>
+    <formulas>
+        <name>fx_EmailSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Verified Workaround Available: [Case #&quot; + {!$Record.CaseNumber} + &quot;] &quot; + {!Loop_Known_Issues.Issue_Title__c}</expression>
+    </formulas>
+    <formulas>
+        <name>fx_Is504TimeoutMatch</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(
+  AND(
+    OR(CONTAINS(LOWER({!$Record.Subject}), &quot;504&quot;), CONTAINS(LOWER(BLANKVALUE({!$Record.Description}, &quot;&quot;)), &quot;504&quot;)),
+    OR(CONTAINS(LOWER({!$Record.Subject}), &quot;timeout&quot;), CONTAINS(LOWER(BLANKVALUE({!$Record.Description}, &quot;&quot;)), &quot;timeout&quot;))
+  ),
+  OR(
+    CONTAINS(LOWER({!$Record.Subject}), &quot;outage&quot;),
+    CONTAINS(LOWER(BLANKVALUE({!$Record.Description}, &quot;&quot;)), &quot;outage&quot;)
+  )
+)</expression>
+    </formulas>
+    <interviewLabel>Case Known Issue AutoLinker {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case Known Issue AutoLinker</label>
+    <loops>
+        <name>Loop_Known_Issues</name>
+        <label>Loop Known Issues</label>
+        <locationX>264</locationX>
+        <locationY>240</locationY>
+        <collectionReference>Get_Active_Known_Issues</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Decision_Is_Technical_Match</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Create_Case_Known_Issue_Junction</name>
+        <label>Create Case Known Issue Junction</label>
+        <locationX>220</locationX>
+        <locationY>720</locationY>
+        <connector>
+            <targetReference>Post_Workaround_Chatter</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Case__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Known_Issue__c</field>
+            <value>
+                <elementReference>Loop_Known_Issues.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Case_Known_Issue__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Post_Workaround_Chatter</name>
+        <label>Post Workaround Chatter</label>
+        <locationX>220</locationX>
+        <locationY>840</locationY>
+        <connector>
+            <targetReference>Decision_Has_Email_And_Workaround</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Body</field>
+            <value>
+                <elementReference>tt_ChatterBody</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ParentId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>FeedItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Check_Existing_Junction</name>
+        <label>Check Existing Junction</label>
+        <locationX>352</locationX>
+        <locationY>480</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Decision_Junction_Exists</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Case__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Known_Issue__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Loop_Known_Issues.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Case_Known_Issue__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Active_Known_Issues</name>
+        <label>Get Active Known Issues</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_If_Known_Issues_Found</targetReference>
+        </connector>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Investigating</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>In Progress</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Known_Issue__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Active_Known_Issues</targetReference>
+        </connector>
+        <filterFormula>AND(
+  NOT(ISBLANK({!$Record.Subject})),
+  NOT({!$Record.IsClosed}),
+  TEXT({!$Record.Type}) != &apos;Other&apos;
+)</filterFormula>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>tt_ChatterBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>[AI Defect Linker] Case automatically linked to Known Issue {!Loop_Known_Issues.Name} ({!Loop_Known_Issues.Issue_Title__c}).
+
+Verified Engineering Workaround:
+{!Loop_Known_Issues.Workaround__c}</text>
+    </textTemplates>
+    <textTemplates>
+        <name>tt_CustomerEmailBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Dear Customer,
+
+We have received your support request regarding: {!$Record.Subject} (Case #{!$Record.CaseNumber}).
+
+Our automated diagnostics system has detected that your issue is linked to a known active platform defect ({!Loop_Known_Issues.Name}: {!Loop_Known_Issues.Issue_Title__c}).
+
+Our engineering team has verified an immediate workaround to unblock your operations:
+--------------------------------------------------
+WORKAROUND / SOLUTION:
+{!Loop_Known_Issues.Workaround__c}
+--------------------------------------------------
+
+Our engineering team is actively rolling out a permanent patch. We will notify you automatically as soon as the patch is fully deployed.
+
+Best regards,
+TechNova Intelligent Cloud Support Team</text>
+    </textTemplates>
+</Flow>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntitlementProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <SObjectType>Case</SObjectType>
+    <active>true</active>
+    <description>Platinum Tier SLA (Tier 3): 480-minute (8-hour) First Response guarantee. Warning at -60 minutes before breach.</description>
+    <entryStartDateField>Case.CreatedDate</entryStartDateField>
+    <exitCriteriaFilterItems>
+        <field>Case.IsClosed</field>
+        <operation>equals</operation>
+        <value>true</value>
+    </exitCriteriaFilterItems>
+    <isVersionDefault>false</isVersionDefault>
+    <milestones>
+        <isDisplayedOnLinkedEntity>true</isDisplayedOnLinkedEntity>
+        <milestoneName>First Response to Customer</milestoneName>
+        <minutesToComplete>480</minutesToComplete>
+        <timeTriggers>
+            <actions>
+                <name>ChangePriorityToHigh</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <timeLength>-60</timeLength>
+            <workflowTimeTriggerUnit>Minutes</workflowTimeTriggerUnit>
+        </timeTriggers>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+    <milestones>
+        <isDisplayedOnLinkedEntity>true</isDisplayedOnLinkedEntity>
+        <milestoneName>Escalate Case</milestoneName>
+        <minutesToComplete>2880</minutesToComplete>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+    <milestones>
+        <isDisplayedOnLinkedEntity>true</isDisplayedOnLinkedEntity>
+        <milestoneName>Close Case</milestoneName>
+        <minutesToComplete>4320</minutesToComplete>
+        <useCriteriaStartTime>false</useCriteriaStartTime>
+    </milestones>
+    <name>Platinum_Tier_SLA_Process</name>
+    <versionMaster>552aj000012qnnl</versionMaster>
+    <versionNumber>1</versionNumber>
+</EntitlementProcess>

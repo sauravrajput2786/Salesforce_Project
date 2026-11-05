@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CASE_NUMBER</field>
+    </columns>
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>STATUS</field>
+    </columns>
+    <columns>
+        <field>PRIORITY</field>
+    </columns>
+    <columns>
+        <field>Case.Feedback_Comments__c</field>
+    </columns>
+    <customDetailFormulas>
+        <calculatedFormula>IF(ISBLANK(TEXT(Case.Customer_Rating__c)), &quot;No Feedback Reply&quot;, TEXT(Case.Customer_Rating__c))</calculatedFormula>
+        <dataType>Text</dataType>
+        <description>Labels unrated cases as No Feedback Reply instead of blank dash</description>
+        <developerName>CDF1</developerName>
+        <label>Customer Rating</label>
+        <scale>2</scale>
+    </customDetailFormulas>
+    <description>Distribution and volume of customer CSAT satisfaction ratings (1 to 5 Stars) on closed cases.</description>
+    <filter>
+        <criteriaItems>
+            <column>STATUS</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CDF1</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <name>CSAT Rating Distribution Report</name>
+    <params>
+        <name>units</name>
+        <value>h</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATEONLY</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>
