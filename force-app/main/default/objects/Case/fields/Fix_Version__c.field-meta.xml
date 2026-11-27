@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fix_Version__c</fullName>
+    <description>Software release or patch version where the permanent defect fix was deployed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Software release or patch version that resolved this case.</inlineHelpText>
+    <label>Fix Version</label>
+    <length>50</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

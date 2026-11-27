@@ -5,8 +5,8 @@
     <assignments>
         <name>Add_To_Cases_Collection</name>
         <label>Add To Cases Collection</label>
-        <locationX>138</locationX>
-        <locationY>1080</locationY>
+        <locationX>90</locationX>
+        <locationY>1200</locationY>
         <assignmentItems>
             <assignToReference>varCol_CasesToClose</assignToReference>
             <operator>Add</operator>
@@ -19,10 +19,26 @@
         </connector>
     </assignments>
     <assignments>
+        <name>Add_To_Chatter_Collection</name>
+        <label>Add To Chatter Collection</label>
+        <locationX>270</locationX>
+        <locationY>1200</locationY>
+        <assignmentItems>
+            <assignToReference>varCol_FeedItemsToCreate</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>varSingle_FeedItem</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Open_Cases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Assign_Case_Resolution_Data</name>
         <label>Assign Case Resolution Data</label>
-        <locationX>138</locationX>
-        <locationY>960</locationY>
+        <locationX>90</locationX>
+        <locationY>1080</locationY>
         <assignmentItems>
             <assignToReference>varSingle_Case.Id</assignToReference>
             <operator>Assign</operator>
@@ -51,6 +67,13 @@
                 <elementReference>fx_ResolutionSummary</elementReference>
             </value>
         </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varSingle_Case.Fix_Version__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Fixed_In_Version__c</elementReference>
+            </value>
+        </assignmentItems>
         <connector>
             <targetReference>Add_To_Cases_Collection</targetReference>
         </connector>
@@ -71,11 +94,37 @@
             <targetReference>Loop_Junctions</targetReference>
         </connector>
     </assignments>
+    <assignments>
+        <name>Assign_High_Touch_Chatter</name>
+        <label>Assign High-Touch Chatter Alert</label>
+        <locationX>270</locationX>
+        <locationY>1080</locationY>
+        <assignmentItems>
+            <assignToReference>varSingle_FeedItem.ParentId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Loop_Open_Cases.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varSingle_FeedItem.Body</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>fx_HighTouchChatterNotice</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Add_To_Chatter_Collection</targetReference>
+        </connector>
+    </assignments>
     <decisions>
         <name>Check_If_Cases_To_Update</name>
         <label>Check If Cases To Update</label>
         <locationX>50</locationX>
-        <locationY>1200</locationY>
+        <locationY>1340</locationY>
+        <defaultConnector>
+            <targetReference>Check_If_Chatter_To_Post</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>Zero Cases To Update</defaultConnectorLabel>
         <rules>
             <name>Has_Cases_To_Update</name>
@@ -91,6 +140,28 @@
                 <targetReference>Bulk_Update_Linked_Cases</targetReference>
             </connector>
             <label>Has Cases To Update</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_If_Chatter_To_Post</name>
+        <label>Check If Chatter To Post</label>
+        <locationX>50</locationX>
+        <locationY>1580</locationY>
+        <defaultConnectorLabel>Zero Chatter To Post</defaultConnectorLabel>
+        <rules>
+            <name>Has_Chatter_To_Post</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>varCol_FeedItemsToCreate</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Bulk_Create_Chatter_Alerts</targetReference>
+            </connector>
+            <label>Has Chatter To Post</label>
         </rules>
     </decisions>
     <decisions>
@@ -137,12 +208,63 @@
             <label>Has Open Cases</label>
         </rules>
     </decisions>
-    <description>Known Issue Mass-Resolution Engine. When a Known Issue is marked Resolved or Closed, bulkifies all linked open cases, applies the release patch resolution details, and closes them in a single bulk update.</description>
+    <decisions>
+        <name>Decision_Is_High_Touch</name>
+        <label>Is High-Touch Case?</label>
+        <locationX>180</locationX>
+        <locationY>960</locationY>
+        <defaultConnector>
+            <targetReference>Assign_Case_Resolution_Data</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Standard Case (Auto-Close)</defaultConnectorLabel>
+        <rules>
+            <name>Rule_Is_High_Touch</name>
+            <conditionLogic>(1 OR 2) AND (3 OR 4)</conditionLogic>
+            <conditions>
+                <leftValueReference>Loop_Open_Cases.Priority</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Critical</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Loop_Open_Cases.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Escalated</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Loop_Open_Cases.Escalation_Reason__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>SLA Breach Risk</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Loop_Open_Cases.Escalation_Reason__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_High_Touch_Chatter</targetReference>
+            </connector>
+            <label>High-Touch (Critical or Escalated)</label>
+        </rules>
+    </decisions>
+    <description>Known Issue Mass-Resolution Engine. When a Known Issue is marked Resolved or Closed, bulkifies linked open cases. Standard cases are auto-closed with resolution details; High-Touch cases (Critical priority or Escalated status) remain open for the assigned agent with an automated manual verification Chatter alert.</description>
     <environments>Default</environments>
     <formulas>
         <name>fx_FaultErrorMessage</name>
         <dataType>String</dataType>
         <expression>&quot;⚠️ Mass resolution failed on linked cases for Known Issue &quot; + {!$Record.Name} + &quot;: &quot; + {!$Flow.FaultMessage}</expression>
+    </formulas>
+    <formulas>
+        <name>fx_HighTouchChatterNotice</name>
+        <dataType>String</dataType>
+        <expression>&quot;⚠️ [Manual Verification Required] Known Issue &quot; + {!$Record.Name} + &quot; (&quot; + {!$Record.Issue_Title__c} + &quot;) has been marked &quot; + TEXT({!$Record.Status__c}) + &quot;. Verified fix deployed in release: &quot; + BLANKVALUE({!$Record.Fixed_In_Version__c}, &quot;Latest Patch&quot;) + &quot;. Because this case is marked Critical / Escalated, it was NOT auto-closed. Please verify with the customer and close manually.&quot;</expression>
     </formulas>
     <formulas>
         <name>fx_ResolutionSummary</name>
@@ -173,7 +295,7 @@
         <collectionReference>Get_Open_Cases_Bulk</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>Assign_Case_Resolution_Data</targetReference>
+            <targetReference>Decision_Is_High_Touch</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
             <targetReference>Check_If_Cases_To_Update</targetReference>
@@ -187,10 +309,20 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordCreates>
+        <name>Bulk_Create_Chatter_Alerts</name>
+        <label>Bulk Create Chatter Alerts</label>
+        <locationX>50</locationX>
+        <locationY>1700</locationY>
+        <faultConnector>
+            <targetReference>Create_Fault_FeedItem</targetReference>
+        </faultConnector>
+        <inputReference>varCol_FeedItemsToCreate</inputReference>
+    </recordCreates>
+    <recordCreates>
         <name>Create_Fault_FeedItem</name>
         <label>Post Fault Chatter on Known Issue</label>
         <locationX>314</locationX>
-        <locationY>1440</locationY>
+        <locationY>1580</locationY>
         <inputAssignments>
             <field>Body</field>
             <value>
@@ -258,7 +390,10 @@
         <name>Bulk_Update_Linked_Cases</name>
         <label>Bulk Update Linked Cases</label>
         <locationX>50</locationX>
-        <locationY>1320</locationY>
+        <locationY>1460</locationY>
+        <connector>
+            <targetReference>Check_If_Chatter_To_Post</targetReference>
+        </connector>
         <faultConnector>
             <targetReference>Create_Fault_FeedItem</targetReference>
         </faultConnector>
@@ -307,11 +442,27 @@
         <objectType>Case</objectType>
     </variables>
     <variables>
+        <name>varCol_FeedItemsToCreate</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>FeedItem</objectType>
+    </variables>
+    <variables>
         <name>varSingle_Case</name>
         <dataType>SObject</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>Case</objectType>
+    </variables>
+    <variables>
+        <name>varSingle_FeedItem</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>FeedItem</objectType>
     </variables>
 </Flow>

@@ -1,8 +1,10 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc'; 
+// LightningElement is the base class for Lightning Web Components. It provides the core functionality and lifecycle hooks for building components in Salesforce.   
 import getCustomer360Data from '@salesforce/apex/Customer360Controller.getCustomer360Data';
 import { refreshApex } from '@salesforce/apex';
 
 export default class Customer360Widget extends LightningElement {
+    // export default class create the component class only like { public class }
     @api recordId;
 
     customer360 = null;

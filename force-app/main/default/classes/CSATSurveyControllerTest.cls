@@ -73,6 +73,7 @@ private class CSATSurveyControllerTest {
 
         System.assertEquals(true, controller.isValidToken, 'Token should be valid for closed case');
         System.assertEquals(false, controller.isAlreadySubmitted, 'Should not be marked already submitted');
+        System.assertNotEquals('', controller.displayCaseNumber, 'displayCaseNumber should be populated');
 
         controller.selectedRating = '5';
         controller.feedbackComments = 'Exceptional support from TechNova engineering!';
@@ -219,4 +220,3 @@ private class CSATSurveyControllerTest {
         System.assertEquals(false, (Boolean)res.get('success'));
     }
 }
-

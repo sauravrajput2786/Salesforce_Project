@@ -7,6 +7,7 @@
 public without sharing class CSATSurveyController {
 
     public Case targetCase { get; private set; }
+    public String displayCaseNumber { get; private set; }
     public String selectedRating { get; set; }
     public String feedbackComments { get; set; }
     public Boolean isValidToken { get; private set; }
@@ -18,6 +19,7 @@ public without sharing class CSATSurveyController {
         isValidToken = false;
         isAlreadySubmitted = false;
         isSuccess = false;
+        displayCaseNumber = '';
     }
 
     /**
@@ -46,6 +48,7 @@ public without sharing class CSATSurveyController {
         }
 
         targetCase = cases[0];
+        displayCaseNumber = targetCase.CaseNumber;
 
         // Security check: Case must be closed and survey must have been dispatched
         if (!targetCase.IsClosed || !targetCase.CSAT_Sent__c) {
@@ -164,4 +167,3 @@ public without sharing class CSATSurveyController {
         return response;
     }
 }
-

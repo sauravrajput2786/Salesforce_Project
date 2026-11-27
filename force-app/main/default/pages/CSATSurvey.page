@@ -45,7 +45,7 @@
             <h1>ABC Customer Support</h1>
             <p>Your satisfaction is our top priority</p>
             <apex:outputPanel rendered="{!isValidToken}">
-                <div class="case-badge">Case #{!targetCase.CaseNumber}</div>
+                <div class="case-badge">Case #{!displayCaseNumber}</div>
             </apex:outputPanel>
         </div>
 
@@ -95,7 +95,7 @@
                 <div class="success-icon">&#10003;</div>
                 <div class="status-title" style="color: #16a34a;">Thank You!</div>
                 <div class="status-desc" id="successDesc">
-                    Your feedback has been successfully submitted and recorded for Case #{!targetCase.CaseNumber}. We appreciate your time in helping us improve ABC support services!
+                    Your feedback has been successfully submitted and recorded for Case #{!displayCaseNumber}. We appreciate your time in helping us improve ABC support services!
                 </div>
             </div>
 

@@ -1,8 +1,8 @@
-# TechNova Cloud Enterprise Service Cloud Architecture & System Design
+# ABC Service Console Enterprise Architecture & System Design
 
 ## 1. System Overview
 
-The **TechNova Enterprise Service Cloud** system is an enterprise-grade customer support automation suite implemented in Salesforce DX. It orchestrates the full lifecycle of support operations across automated intake, entitlement gatekeeping, omni-channel routing, AI-assisted defect linking, end-to-end SLA milestone governance, and executive KPI reporting.
+The **ABC Service Console** system is an enterprise-grade customer support automation suite implemented in Salesforce DX. It orchestrates the full lifecycle of support operations across automated intake, entitlement gatekeeping, omni-channel routing, AI-assisted defect linking, end-to-end SLA milestone governance, and executive KPI reporting in the ABC Service Console Lightning app.
 
 ```mermaid
 graph TD
